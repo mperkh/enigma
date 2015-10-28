@@ -7,8 +7,9 @@ var Enigma = function(config) {
   var ukw = config.ukw;
   var walzenlage = config.walzenlage;
   var ringstellung = config.ringstellung;
-  var walzenpos = config.walzenpos;
-  var steckbrett = config.steckbrett;
+  var walzenpos = config.walzenpos.map(i => {return i.toLowerCase()});
+  var steckbrett = config.steckbrett.map(i => {return i.toLowerCase()});
+  var result = '';
   
   var alphabet = 'abcdefghijklmnopqrstuvwxyz';
   
@@ -27,21 +28,21 @@ var Enigma = function(config) {
   };
 
   this.pressKey = function(key) {
-    var result = key;
+    result = key.toLowerCase();
+    
     rotateW(walzenlage[2]);
+    
     console.log(walzenlage.reduce((prev, curr) => {
       return prev + alphabet.charAt(walzen[curr].pos-1).toUpperCase()
     }, ''));
-    result = processS(result);
-    result = processW(result, walzenlage[2], true);
-    result = processW(result, walzenlage[1], true);
-    result = processW(result, walzenlage[0], true);
-    result = processR(result);
-    result = processW(result, walzenlage[0], false);
-    result = processW(result, walzenlage[1], false);
-    result = processW(result, walzenlage[2], false);
-    result = processS(result);
-    return result
+    
+    processS(result);
+    [2,1,0].forEach(w => processW(result, walzenlage[w], true));
+    processR(result);
+    [0,1,2].forEach(w => processW(result, walzenlage[w], false));
+    processS(result);
+    
+    return result.toUpperCase()
   };
 
   function rotateW(w, init) {
@@ -84,24 +85,23 @@ var Enigma = function(config) {
     if (finalPos < 0) finalPos += 26;
     if (finalPos > 26) finalPos -= 26;
     
-    return alphabet.charAt(finalPos);
+    result = alphabet.charAt(finalPos);
   };
 
   function processR(key) {
-    return reflector[ukw].charAt(alphabet.indexOf(key))
+    result = reflector[ukw].charAt(alphabet.indexOf(key))
   };
 
   function processS(key, rein) {
-    var result = key;
+    result = key;
     steckbrett.forEach(s => {
-      if (key === s.charAt(0).toLowerCase()) {
-        result = s.charAt(1).toLowerCase();
+      if (key === s.charAt(0)) {
+        result = s.charAt(1);
       }
-      else if (key === s.charAt(1).toLowerCase()) {
-        result = s.charAt(0).toLowerCase();
+      else if (key === s.charAt(1)) {
+        result = s.charAt(0);
       }
     });
-    return result
   }
 
   // Initialization of Enigma machine
@@ -121,10 +121,10 @@ var config = {
   ukw: 'b',
   walzenlage: [1, 2, 3],
   ringstellung: [16, 26, 08],
-  walzenpos: ['a','d','u'],
+  walzenpos: ['A','D','U'],
   steckbrett: ['AD', 'CN', 'ET', 'FL', 'GI', 'JV', 'KZ', 'PU', 'QY', 'WX']
 }
 
 var Machine = new Enigma(config);
-var input = 'AACHENISTGERETTET'.toLowerCase().split('');
-console.log(input.map((i) => Machine.pressKey(i)).join('').toUpperCase());
+var input = 'AACHENISTGERETTET'.split('');
+console.log(input.map(i => Machine.pressKey(i)).join(''));
