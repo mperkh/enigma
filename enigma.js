@@ -1,4 +1,5 @@
 // Simualtion of Enigma M3 enycrption machine 
+// Written by Michael Perkhofer, 2015
 // https://de.wikipedia.org/wiki/Enigma_(Maschine)#Aufbau
 
 var Enigma = function(config) {
