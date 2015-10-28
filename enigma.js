@@ -4,15 +4,15 @@
 
 var Enigma = function(config) {
   
-  this.ukw = config.ukw;
-  this.walzenlage = config.walzenlage;
-  this.ringstellung = config.ringstellung;
-  this.walzenpos = config.walzenpos;
-  this.steckbrett = config.steckbrett;
+  var ukw = config.ukw;
+  var walzenlage = config.walzenlage;
+  var ringstellung = config.ringstellung;
+  var walzenpos = config.walzenpos;
+  var steckbrett = config.steckbrett;
   
-  this.egw = 'abcdefghijklmnopqrstuvwxyz';
+  var egw = 'abcdefghijklmnopqrstuvwxyz';
   
-  this.walzen = {
+  var walzen = {
     1: {subst: 'ekmflgdqvzntowyhxuspaibrcj', pos: 1, kerbe: 'q'},
     2: {subst: 'ajdksiruxblhwtmcqgznpyfvoe', pos: 1, kerbe: 'e'},
     3: {subst: 'bdfhjlcprtxvznyeiwgakmusqo', pos: 1, kerbe: 'v'},
@@ -20,7 +20,7 @@ var Enigma = function(config) {
     5: {subst: 'vzbrgityupsdnhlxawmjqofeck', pos: 1, kerbe: 'z'},
   };
 
-  this.reflector = {
+  var reflector = {
     a: 'ejmzalyxvbwfcrquontspikhgd',
     b: 'yruhqsldpxngokmiebfzcwvjat',
     c: 'fvpjiaoyedrzxwgctkuqsbnmhl'
@@ -28,72 +28,72 @@ var Enigma = function(config) {
 
   this.pressKey = function(key) {
     var result = key;
-    this.rotateW(this.walzenlage[2]);
-    console.log(this.walzenlage.reduce((prev, curr) => {
-      return prev + this.egw.charAt(this.walzen[curr].pos-1).toUpperCase()
+    rotateW(walzenlage[2]);
+    console.log(walzenlage.reduce((prev, curr) => {
+      return prev + egw.charAt(walzen[curr].pos-1).toUpperCase()
     }, ''));
-    result = this.processS(result);
-    result = this.processW(result, this.walzenlage[2], true);
-    result = this.processW(result, this.walzenlage[1], true);
-    result = this.processW(result, this.walzenlage[0], true);
-    result = this.processR(result);
-    result = this.processW(result, this.walzenlage[0], false);
-    result = this.processW(result, this.walzenlage[1], false);
-    result = this.processW(result, this.walzenlage[2], false);
-    result = this.processS(result);
+    result = processS(result);
+    result = processW(result, walzenlage[2], true);
+    result = processW(result, walzenlage[1], true);
+    result = processW(result, walzenlage[0], true);
+    result = processR(result);
+    result = processW(result, walzenlage[0], false);
+    result = processW(result, walzenlage[1], false);
+    result = processW(result, walzenlage[2], false);
+    result = processS(result);
     return result
   };
 
-  this.rotateW = function(w, init) {
-    this.rotate = function (w) {
-      this.walzen[w].subst += this.walzen[w].subst.charAt(0);
-      this.walzen[w].subst = this.walzen[w].subst.slice(1);
-      if (this.walzen[w].pos === 26) this.walzen[w].pos = 0;
-      this.walzen[w].pos += 1;
+  function rotateW(w, init) {
+    function rotate(w) {
+      walzen[w].subst += walzen[w].subst.charAt(0);
+      walzen[w].subst = walzen[w].subst.slice(1);
+      if (walzen[w].pos === 26) walzen[w].pos = 0;
+      walzen[w].pos += 1;
     }
 
-    this.rotate(w);
+    rotate(w);
 
-    if (!init && this.walzen[w].pos === this.egw.indexOf(this.walzen[w].kerbe) + 2) {
-      this.rotate(this.walzenlage[1]);
+    if (!init && walzen[w].pos === egw.indexOf(walzen[w].kerbe) + 2) {
+      rotate(walzenlage[1]);
       return;
     }
 
-    if (!init && this.walzen[this.walzenlage[1]].pos === this.egw.indexOf(this.walzen[this.walzenlage[1]].kerbe) + 1) {   
-      this.rotate(this.walzenlage[0]);
-      this.rotate(this.walzenlage[1]); // Anomalie
+    if (!init && walzen[walzenlage[1]].pos === egw.indexOf(walzen[walzenlage[1]].kerbe) + 1) {   
+      rotate(walzenlage[0]);
+      rotate(walzenlage[1]); // Anomalie
     }
   };
 
-  this.processW = function(key, w, rein) {
+  function processW(key, w, rein) {
     var trans = '';
     var finalPos = '';
 
     if (rein) {
-      trans = this.walzen[w].subst.charAt(this.egw.indexOf(key));
-      finalPos = this.egw.indexOf(trans) - this.walzen[w].pos + this.ringstellung[this.walzenlage.indexOf(w)];
+      trans = walzen[w].subst.charAt(egw.indexOf(key));
+      finalPos = egw.indexOf(trans) - walzen[w].pos + ringstellung[walzenlage.indexOf(w)];
     }
     else {
-      a = this.egw.indexOf(key) + this.walzen[w].pos - this.ringstellung[this.walzenlage.indexOf(w)];
+      a = egw.indexOf(key) + walzen[w].pos - ringstellung[walzenlage.indexOf(w)];
       if (a < 0) a += 26;
       if (a >= 26) a -= 26;
-      trans = this.egw.charAt(this.walzen[w].subst.indexOf(this.egw.charAt(a)));
-      finalPos = this.egw.indexOf(trans);
+      trans = egw.charAt(walzen[w].subst.indexOf(egw.charAt(a)));
+      finalPos = egw.indexOf(trans);
     } 
     
     if (finalPos < 0) finalPos += 26;
     if (finalPos > 26) finalPos -= 26;
     
-    return this.egw.charAt(finalPos);
+    return egw.charAt(finalPos);
   };
 
-  this.processR = function(key) {
-    return this.reflector[this.ukw].charAt(this.egw.indexOf(key))
+  function processR(key) {
+    return reflector[ukw].charAt(egw.indexOf(key))
   };
 
-  this.processS = function(key, rein) {
+  function processS(key, rein) {
     var result = key;
-    this.steckbrett.forEach(s => {
+    steckbrett.forEach(s => {
       if (key === s.charAt(0).toLowerCase()) {
         result = s.charAt(1).toLowerCase();
       }
@@ -106,12 +106,12 @@ var Enigma = function(config) {
 
   // Initialization of Enigma machine
 
-  this.walzenlage.forEach( (w, index)  => {
-    for (i=1; i < this.ringstellung[index]; i++) {
-      this.walzen[w].subst = this.walzen[w].subst.charAt(25) + this.walzen[w].subst.substr(0, 25);
+  walzenlage.forEach( (w, index)  => {
+    for (i=1; i < ringstellung[index]; i++) {
+      walzen[w].subst = walzen[w].subst.charAt(25) + walzen[w].subst.substr(0, 25);
     }
-    for (i=0; i < this.egw.indexOf(this.walzenpos[index]); i++) {
-      this.rotateW(w, true)
+    for (i=0; i < egw.indexOf(walzenpos[index]); i++) {
+      rotateW(w, true)
     }
   });
 
