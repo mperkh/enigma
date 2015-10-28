@@ -10,7 +10,7 @@ var Enigma = function(config) {
   var walzenpos = config.walzenpos;
   var steckbrett = config.steckbrett;
   
-  var egw = 'abcdefghijklmnopqrstuvwxyz';
+  var alphabet = 'abcdefghijklmnopqrstuvwxyz';
   
   var walzen = {
     1: {subst: 'ekmflgdqvzntowyhxuspaibrcj', pos: 1, kerbe: 'q'},
@@ -30,7 +30,7 @@ var Enigma = function(config) {
     var result = key;
     rotateW(walzenlage[2]);
     console.log(walzenlage.reduce((prev, curr) => {
-      return prev + egw.charAt(walzen[curr].pos-1).toUpperCase()
+      return prev + alphabet.charAt(walzen[curr].pos-1).toUpperCase()
     }, ''));
     result = processS(result);
     result = processW(result, walzenlage[2], true);
@@ -54,12 +54,12 @@ var Enigma = function(config) {
 
     rotate(w);
 
-    if (!init && walzen[w].pos === egw.indexOf(walzen[w].kerbe) + 2) {
+    if (!init && walzen[w].pos === alphabet.indexOf(walzen[w].kerbe) + 2) {
       rotate(walzenlage[1]);
       return;
     }
 
-    if (!init && walzen[walzenlage[1]].pos === egw.indexOf(walzen[walzenlage[1]].kerbe) + 1) {   
+    if (!init && walzen[walzenlage[1]].pos === alphabet.indexOf(walzen[walzenlage[1]].kerbe) + 1) {   
       rotate(walzenlage[0]);
       rotate(walzenlage[1]); // Anomalie
     }
@@ -70,25 +70,25 @@ var Enigma = function(config) {
     var finalPos = '';
 
     if (rein) {
-      trans = walzen[w].subst.charAt(egw.indexOf(key));
-      finalPos = egw.indexOf(trans) - walzen[w].pos + ringstellung[walzenlage.indexOf(w)];
+      trans = walzen[w].subst.charAt(alphabet.indexOf(key));
+      finalPos = alphabet.indexOf(trans) - walzen[w].pos + ringstellung[walzenlage.indexOf(w)];
     }
     else {
-      a = egw.indexOf(key) + walzen[w].pos - ringstellung[walzenlage.indexOf(w)];
+      a = alphabet.indexOf(key) + walzen[w].pos - ringstellung[walzenlage.indexOf(w)];
       if (a < 0) a += 26;
       if (a >= 26) a -= 26;
-      trans = egw.charAt(walzen[w].subst.indexOf(egw.charAt(a)));
-      finalPos = egw.indexOf(trans);
+      trans = alphabet.charAt(walzen[w].subst.indexOf(alphabet.charAt(a)));
+      finalPos = alphabet.indexOf(trans);
     } 
     
     if (finalPos < 0) finalPos += 26;
     if (finalPos > 26) finalPos -= 26;
     
-    return egw.charAt(finalPos);
+    return alphabet.charAt(finalPos);
   };
 
   function processR(key) {
-    return reflector[ukw].charAt(egw.indexOf(key))
+    return reflector[ukw].charAt(alphabet.indexOf(key))
   };
 
   function processS(key, rein) {
@@ -110,7 +110,7 @@ var Enigma = function(config) {
     for (i=1; i < ringstellung[index]; i++) {
       walzen[w].subst = walzen[w].subst.charAt(25) + walzen[w].subst.substr(0, 25);
     }
-    for (i=0; i < egw.indexOf(walzenpos[index]); i++) {
+    for (i=0; i < alphabet.indexOf(walzenpos[index]); i++) {
       rotateW(w, true)
     }
   });
