@@ -70,24 +70,23 @@ var Enigma = function(config) {
   };
 
   function processW(key, w, rein) {
-    var trans = '';
-    var finalPos = '';
-    var a;
+    var pre_map;
+    var map;
 
     if (rein) {
-      trans = walzen[w].subst.charAt(alphabet.indexOf(key));
-      finalPos = alphabet.indexOf(trans) - walzen[w].pos + ringstellung[walzenlage.indexOf(w)];
-      if (finalPos < 0) finalPos += 26;
-      if (finalPos > 26) finalPos -= 26;
+      pre_map = walzen[w].subst.charAt(alphabet.indexOf(key));
+      map = alphabet.indexOf(pre_map) - walzen[w].pos + ringstellung[walzenlage.indexOf(w)];
+      if (map < 0) map += 26;
+      if (map > 26) map -= 26;
     }
     else {
-      a = alphabet.indexOf(key) + walzen[w].pos - ringstellung[walzenlage.indexOf(w)];
-      if (a < 0) a += 26;
-      if (a >= 26) a -= 26;
-      finalPos = walzen[w].subst.indexOf(alphabet.charAt(a));
-    } 
-    
-    result = alphabet.charAt(finalPos);
+      pre_map = alphabet.indexOf(key) + walzen[w].pos - ringstellung[walzenlage.indexOf(w)];
+      if (pre_map < 0) pre_map += 26;
+      if (pre_map >= 26) pre_map -= 26;
+      map = walzen[w].subst.indexOf(alphabet.charAt(pre_map));
+    }
+
+    result = alphabet.charAt(map);
   };
 
   function processR(key) {
