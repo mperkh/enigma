@@ -77,17 +77,15 @@ var Enigma = function(config) {
     if (rein) {
       trans = walzen[w].subst.charAt(alphabet.indexOf(key));
       finalPos = alphabet.indexOf(trans) - walzen[w].pos + ringstellung[walzenlage.indexOf(w)];
+      if (finalPos < 0) finalPos += 26;
+      if (finalPos > 26) finalPos -= 26;
     }
     else {
       a = alphabet.indexOf(key) + walzen[w].pos - ringstellung[walzenlage.indexOf(w)];
       if (a < 0) a += 26;
       if (a >= 26) a -= 26;
-      trans = alphabet.charAt(walzen[w].subst.indexOf(alphabet.charAt(a)));
-      finalPos = alphabet.indexOf(trans);
+      finalPos = walzen[w].subst.indexOf(alphabet.charAt(a));
     } 
-    
-    if (finalPos < 0) finalPos += 26;
-    if (finalPos > 26) finalPos -= 26;
     
     result = alphabet.charAt(finalPos);
   };
