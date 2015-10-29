@@ -72,6 +72,7 @@ var Enigma = function(config) {
   function processW(key, w, rein) {
     var trans = '';
     var finalPos = '';
+    var a;
 
     if (rein) {
       trans = walzen[w].subst.charAt(alphabet.indexOf(key));
