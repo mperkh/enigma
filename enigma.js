@@ -95,7 +95,7 @@ var Enigma = function(config) {
     result = reflector[ukw].charAt(alphabet.indexOf(key))
   };
 
-  function processS(key, rein) {
+  function processS(key) {
     result = key;
     steckbrett.forEach(s => {
       if (key === s.charAt(0)) {
