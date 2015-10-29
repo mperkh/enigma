@@ -55,12 +55,15 @@ var Enigma = function(config) {
 
     rotate(w);
 
-    if (!init && walzen[w].pos === alphabet.indexOf(walzen[w].kerbe) + 2) {
+    var w2 = walzen[walzenlage[2]];
+    var w1 = walzen[walzenlage[1]];
+
+    if (!init && w2.pos === alphabet.indexOf(w2.kerbe) + 2) {
       rotate(walzenlage[1]);
       return;
     }
 
-    if (!init && walzen[walzenlage[1]].pos === alphabet.indexOf(walzen[walzenlage[1]].kerbe) + 1) {   
+    if (!init && w1.pos === alphabet.indexOf(w1.kerbe) + 1) {
       rotate(walzenlage[0]);
       rotate(walzenlage[1]); // Anomalie
     }
