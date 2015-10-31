@@ -76,13 +76,13 @@ var Enigma = function(config) {
     if (rein) {
       pre_map = walzen[w].subst.charAt(alphabet.indexOf(key));
       map = alphabet.indexOf(pre_map) - walzen[w].pos + ringstellung[walzenlage.indexOf(w)];
-      if (map < 0) map += 26;
+      if (map <= 0) map += 26;
       if (map > 26) map -= 26;
     }
     else {
       pre_map = alphabet.indexOf(key) + walzen[w].pos - ringstellung[walzenlage.indexOf(w)];
-      if (pre_map < 0) pre_map += 26;
-      if (pre_map >= 26) pre_map -= 26;
+      if (pre_map <= 0) pre_map += 26;
+      if (pre_map > 26) pre_map -= 26;
       map = walzen[w].subst.indexOf(alphabet.charAt(pre_map));
     }
 
